@@ -3,7 +3,7 @@ import scrapy
 
 class ShopSpidey(scrapy.Spider):
     name = 'shop_spidey'
-    start_urls = [f"https://spettroworld.com/shop/product/page/{i}" for i in range(1, 28)]
+    start_urls = [f"https://spettroworld.com/shop/product/page/{i}" for i in range(1, 27)]
 
     def parse(self, response):
         for href in list(set(response.css('h5.mkd-product-list-title a ::attr("href")').extract())):
@@ -13,6 +13,7 @@ class ShopSpidey(scrapy.Spider):
         def extract_summary():
             information = {
                 'name': response.css('h3.mkd-single-product-title::text').get(),
+                'tag': response.css('.mkd-breadcrumbs-inner a::text')[3].get(),
                 'price': response.css('p.price span::text').get(),
                 'description': " ".join([x.get() for x in response.css('div.summary div p::text')]).replace(u'\xa0', u' '),
                 'size_guide': "\n".join([x.get() for x in response.css('div.size-guide::text')])
